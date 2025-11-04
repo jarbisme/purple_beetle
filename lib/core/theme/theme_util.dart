@@ -39,6 +39,8 @@ class AppTheme {
       ),
     ),
 
+    iconTheme: IconThemeData(color: primaryColor, size: 30),
+
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(borderRadius)),

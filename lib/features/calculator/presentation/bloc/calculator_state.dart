@@ -4,32 +4,31 @@ import 'package:purple_beetle/features/calculator/domain/entities/expression.dar
 @immutable
 abstract class CalculatorState {
   final String displayValue;
+  final Expression expression;
 
-  const CalculatorState({required this.displayValue});
+  const CalculatorState({required this.displayValue, required this.expression});
 
-  List<Object> get props => [displayValue];
+  List<Object> get props => [displayValue, expression];
 }
 
 /// Initial state of the calculator
 class CalculatorInitialState extends CalculatorState {
-  const CalculatorInitialState() : super(displayValue: '0');
+  CalculatorInitialState() : super(displayValue: '0', expression: Expression([]));
 }
 
 /// State when the user is building the expression
 class BuildingExpressionState extends CalculatorState {
-  final Expression expression;
+  final int cursorIndex;
 
-  const BuildingExpressionState({required this.expression, required super.displayValue});
+  const BuildingExpressionState({required super.expression, this.cursorIndex = 0, required super.displayValue});
 
   @override
-  List<Object> get props => [expression, displayValue];
+  List<Object> get props => [expression, cursorIndex, displayValue];
 }
 
 /// State representing the result of a successful evaluation
 class EvaluationSuccess extends CalculatorState {
-  final Expression expression;
-
-  const EvaluationSuccess({required this.expression, required super.displayValue});
+  const EvaluationSuccess({required super.expression, required super.displayValue});
 
   @override
   List<Object> get props => [expression, displayValue];
@@ -37,9 +36,7 @@ class EvaluationSuccess extends CalculatorState {
 
 /// State representing an evaluation error
 class EvaluationError extends CalculatorState {
-  final Expression expression;
-
-  const EvaluationError({required this.expression, required super.displayValue});
+  const EvaluationError({required super.expression, required super.displayValue});
 
   @override
   List<Object> get props => [expression, displayValue];

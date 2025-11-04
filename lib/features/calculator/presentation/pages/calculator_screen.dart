@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:purple_beetle/features/calculator/presentation/widgets/calculator_display.dart';
 import 'package:purple_beetle/features/calculator/presentation/widgets/keypad.dart';
 
 class CalculatorScreen extends StatelessWidget {
@@ -6,23 +7,9 @@ class CalculatorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       // appBar: AppBar(title: const Text('Calculation Screen')),
-      body: Column(
-        children: [
-          Expanded(
-            child: Container(
-              alignment: Alignment.bottomRight,
-              padding: const EdgeInsets.all(24.0),
-              child: Text('0', style: theme.textTheme.displayLarge),
-            ),
-          ),
-          Divider(),
-          Keypad(),
-        ],
-      ),
+      body: Column(children: [CalculatorDisplay(), Divider(), Keypad()]),
     );
   }
 }

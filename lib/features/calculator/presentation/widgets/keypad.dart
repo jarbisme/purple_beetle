@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:purple_beetle/core/theme/theme_util.dart';
+import 'package:purple_beetle/features/calculator/domain/entities/expression.dart';
+import 'package:purple_beetle/features/calculator/presentation/widgets/keypad_button.dart';
 
 class Keypad extends StatelessWidget {
   const Keypad({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // final theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return Container(
       padding: const EdgeInsets.all(8.0),
@@ -24,25 +27,50 @@ class Keypad extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        _buildButton('AC', flex: 2, backgroundColor: AppTheme.secondaryColor.withValues(alpha: 0.1)),
-                        _buildButton('-/+', color: AppTheme.secondaryColor),
+                        TextKeypadButton(
+                          number: 'AC',
+                          flex: 2,
+                          backgroundColor: AppTheme.secondaryColor.withValues(alpha: 0.1),
+                        ),
+                        TextKeypadButton(number: '-/+', color: AppTheme.secondaryColor),
                       ],
                     ),
                     Row(
                       children: [
-                        _buildButton('(', color: AppTheme.secondaryColor),
-                        _buildButton(')', color: AppTheme.secondaryColor),
-                        _buildButton('%', color: AppTheme.secondaryColor),
+                        TextKeypadButton(number: '(', color: AppTheme.secondaryColor, token: ParenthesisToken(('('))),
+                        TextKeypadButton(number: ')', color: AppTheme.secondaryColor, token: ParenthesisToken((')'))),
+                        IconKeypadButton(
+                          icon: Icon(LucideIcons.percent, color: AppTheme.secondaryColor, size: theme.iconTheme.size),
+                          token: OperatorToken(('%')),
+                        ),
                       ],
                     ),
-                    Row(children: [_buildButton('7'), _buildButton('8'), _buildButton('9')]),
-                    Row(children: [_buildButton('4'), _buildButton('5'), _buildButton('6')]),
-                    Row(children: [_buildButton('1'), _buildButton('2'), _buildButton('3')]),
                     Row(
                       children: [
-                        _buildButton('fn', backgroundColor: AppTheme.secondaryColor.withValues(alpha: 0.1)),
-                        _buildButton('0'),
-                        _buildButton('.'),
+                        TextKeypadButton(number: '7', token: DigitToken(7)),
+                        TextKeypadButton(number: '8', token: DigitToken(8)),
+                        TextKeypadButton(number: '9', token: DigitToken(9)),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        TextKeypadButton(number: '4', token: DigitToken(4)),
+                        TextKeypadButton(number: '5', token: DigitToken(5)),
+                        TextKeypadButton(number: '6', token: DigitToken(6)),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        TextKeypadButton(number: '1', token: DigitToken(1)),
+                        TextKeypadButton(number: '2', token: DigitToken(2)),
+                        TextKeypadButton(number: '3', token: DigitToken(3)),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        TextKeypadButton(number: 'fn', backgroundColor: AppTheme.secondaryColor.withValues(alpha: 0.1)),
+                        TextKeypadButton(number: '0', token: DigitToken(0)),
+                        TextKeypadButton(number: '.', token: DecimalPointToken()),
                       ],
                     ),
                   ],
@@ -60,18 +88,33 @@ class Keypad extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      _buildButton('<', padding: const EdgeInsets.all(0)),
+                      IconKeypadButton(
+                        icon: Icon(LucideIcons.delete, color: theme.iconTheme.color, size: theme.iconTheme.size),
+                        padding: const EdgeInsets.all(0),
+                      ),
                       const SizedBox(height: 8),
-                      _buildButton('/', padding: const EdgeInsets.all(0)),
+                      TextKeypadButton(number: '/', padding: const EdgeInsets.all(0), token: OperatorToken(('/'))),
                       const SizedBox(height: 8),
-                      _buildButton('x', padding: const EdgeInsets.all(0)),
+                      IconKeypadButton(
+                        icon: Icon(LucideIcons.x, color: theme.iconTheme.color, size: theme.iconTheme.size),
+                        padding: const EdgeInsets.all(0),
+                        token: OperatorToken(('*')),
+                      ),
                       const SizedBox(height: 8),
-                      _buildButton('-', padding: const EdgeInsets.all(0)),
+                      IconKeypadButton(
+                        icon: Icon(LucideIcons.minus, color: theme.iconTheme.color, size: theme.iconTheme.size),
+                        padding: const EdgeInsets.all(0),
+                        token: OperatorToken(('-')),
+                      ),
                       const SizedBox(height: 8),
-                      _buildButton('+', padding: const EdgeInsets.all(0)),
+                      IconKeypadButton(
+                        icon: Icon(LucideIcons.plus, color: theme.iconTheme.color, size: theme.iconTheme.size),
+                        padding: const EdgeInsets.all(0),
+                        token: OperatorToken(('+')),
+                      ),
                       const SizedBox(height: 8),
-                      _buildButton(
-                        '=',
+                      TextKeypadButton(
+                        number: '=',
                         padding: const EdgeInsets.all(0),
                         color: Colors.white,
                         backgroundColor: AppTheme.primaryColor,
@@ -87,24 +130,14 @@ class Keypad extends StatelessWidget {
     );
   }
 
-  Widget _buildButton(String text, {int flex = 1, EdgeInsets? padding, Color? color, Color? backgroundColor}) {
-    return Expanded(
-      flex: flex,
-      child: Padding(
-        padding: padding ?? const EdgeInsets.all(4.0),
-        // The button's style and radius are now set by the theme
-        child: SizedBox(
-          height: 55,
-          child: TextButton(
-            style: TextButton.styleFrom(
-              backgroundColor: backgroundColor ?? Colors.transparent,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppTheme.borderRadius)),
-            ),
-            onPressed: () {},
-            child: Text(text, style: TextStyle(color: color ?? AppTheme.primaryColor)),
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _buildButton(
+  //   String text, {
+  //   // ExpressionToken token,
+  //   int flex = 1,
+  //   EdgeInsets? padding,
+  //   Color? color,
+  //   Color? backgroundColor,
+  // }) {
+  //   return KeypadButton(child: ,);
+  // }
 }
