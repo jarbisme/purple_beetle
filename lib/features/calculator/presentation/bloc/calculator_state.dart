@@ -1,43 +1,38 @@
-import 'package:flutter/foundation.dart';
+import 'package:equatable/equatable.dart';
 import 'package:purple_beetle/features/calculator/domain/entities/expression.dart';
 
-@immutable
-abstract class CalculatorState {
-  final String displayValue;
+class CalculatorState extends Equatable {
+  /// The list of tokens representing the current mathematical expression.
   final Expression expression;
 
-  const CalculatorState({required this.displayValue, required this.expression});
-
-  List<Object> get props => [displayValue, expression];
-}
-
-/// Initial state of the calculator
-class CalculatorInitialState extends CalculatorState {
-  CalculatorInitialState() : super(displayValue: '0', expression: Expression([]));
-}
-
-/// State when the user is building the expression
-class BuildingExpressionState extends CalculatorState {
+  /// The position of the cursor in the expression.
   final int cursorIndex;
 
-  const BuildingExpressionState({required super.expression, this.cursorIndex = 0, required super.displayValue});
+  /// The final calculated result to be displayed. Null if not calculated.
+  final String? result;
+
+  /// An error message to be displayed. Null if there is no error.
+  final String? error;
+
+  const CalculatorState({this.expression = const Expression([]), this.cursorIndex = 0, this.result, this.error});
+
+  /// Creates a copy of the current state with updated values.
+  CalculatorState copyWith({
+    Expression? expression,
+    int? cursorIndex,
+    String? result,
+    String? error,
+    bool clearResult = false,
+    bool clearError = false,
+  }) {
+    return CalculatorState(
+      expression: expression ?? this.expression,
+      cursorIndex: cursorIndex ?? this.cursorIndex,
+      result: clearResult ? null : result ?? this.result,
+      error: clearError ? null : error ?? this.error,
+    );
+  }
 
   @override
-  List<Object> get props => [expression, cursorIndex, displayValue];
-}
-
-/// State representing the result of a successful evaluation
-class EvaluationSuccess extends CalculatorState {
-  const EvaluationSuccess({required super.expression, required super.displayValue});
-
-  @override
-  List<Object> get props => [expression, displayValue];
-}
-
-/// State representing an evaluation error
-class EvaluationError extends CalculatorState {
-  const EvaluationError({required super.expression, required super.displayValue});
-
-  @override
-  List<Object> get props => [expression, displayValue];
+  List<Object?> get props => [expression, cursorIndex, result, error];
 }

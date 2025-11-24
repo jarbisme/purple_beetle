@@ -81,7 +81,7 @@ class TextKeypadButton extends StatelessWidget {
           context.read<CalculatorBloc>().add(InsertToken(token!));
         }
       },
-      child: Text(number, style: TextStyle(color: color ?? AppTheme.primaryColor)),
+      child: Text(number, style: TextStyle(color: color ?? Theme.of(context).colorScheme.primary)),
     );
   }
 }

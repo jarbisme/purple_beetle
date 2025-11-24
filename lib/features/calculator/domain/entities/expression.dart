@@ -1,7 +1,7 @@
 /// Represents a mathematical expression composed of tokens.
 class Expression {
   final List<ExpressionToken> tokens;
-  Expression(this.tokens);
+  const Expression(this.tokens);
 }
 
 /// Abstract class representing a token in the expression.
