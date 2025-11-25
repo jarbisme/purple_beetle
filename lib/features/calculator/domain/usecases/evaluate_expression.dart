@@ -61,20 +61,35 @@ class EvaluateExpression {
     return result;
   }
 
-  /// Balances open and close parentheses by adding missing closing parentheses at the end
-  /// e.g., (2+3 -> (2+3)
-  // TODO: Verify if this covers nested parentheses correctly
+  /// Balances open and close parentheses by adding missing parentheses
+  /// e.g., (2+3 -> (2+3), 2+3) -> (2+3)
   List<ExpressionToken> _balanceParentheses(List<ExpressionToken> tokens) {
     int openCount = 0;
+    int closeCount = 0;
 
     for (final token in tokens) {
       if (token is ParenthesisToken) {
-        openCount += token.parenthesis == '(' ? 1 : -1;
+        if (token.parenthesis == '(') {
+          openCount++;
+        } else {
+          closeCount++;
+        }
       }
     }
 
-    final result = List<ExpressionToken>.from(tokens);
-    for (int i = 0; i < openCount; i++) {
+    final result = <ExpressionToken>[];
+
+    // Add opening parentheses at the start if there are extra closing ones
+    final missingOpen = closeCount > openCount ? closeCount - openCount : 0;
+    for (int i = 0; i < missingOpen; i++) {
+      result.add(ParenthesisToken('('));
+    }
+
+    result.addAll(tokens);
+
+    // Add closing parentheses at the end if there are extra opening ones
+    final missingClose = openCount > closeCount ? openCount - closeCount : 0;
+    for (int i = 0; i < missingClose; i++) {
       result.add(ParenthesisToken(')'));
     }
 

@@ -108,6 +108,79 @@ void main() {
 
         expect(result, '25');
       });
+
+      test('nested parentheses ((1+2)*(3+4)) should return 21', () {
+        final expression = Expression([
+          ParenthesisToken('('),
+          ParenthesisToken('('),
+          DigitToken(1),
+          OperatorToken('+'),
+          DigitToken(2),
+          ParenthesisToken(')'),
+          OperatorToken('*'),
+          ParenthesisToken('('),
+          DigitToken(3),
+          OperatorToken('+'),
+          DigitToken(4),
+          ParenthesisToken(')'),
+          ParenthesisToken(')'),
+        ]);
+
+        final result = evaluateExpression(expression: expression);
+
+        expect(result, '21');
+      });
+    });
+
+    group('Paranthesis Handling -', () {
+      test('unmatched opening parenthesis (2+3 should return 5', () {
+        final expression = Expression([ParenthesisToken('('), DigitToken(2), OperatorToken('+'), DigitToken(3)]);
+
+        final result = evaluateExpression(expression: expression);
+
+        expect(result, '5');
+      });
+
+      test('unmatched closing parenthesis 2+3) should return 5', () {
+        final expression = Expression([DigitToken(2), OperatorToken('+'), DigitToken(3), ParenthesisToken(')')]);
+
+        final result = evaluateExpression(expression: expression);
+
+        expect(result, '5');
+      });
+
+      test('unbalanced nested parentheses should be balanced and evaluated. ((1+2)*3', () {
+        final expression = Expression([
+          ParenthesisToken('('),
+          ParenthesisToken('('),
+          DigitToken(1),
+          OperatorToken('+'),
+          DigitToken(2),
+          ParenthesisToken(')'),
+          OperatorToken('*'),
+          DigitToken(3),
+        ]);
+
+        final result = evaluateExpression(expression: expression);
+
+        expect(result, '9');
+      });
+
+      test('more complex unbalanced nested parentheses should be balanced and evaluated. (2+(3*4', () {
+        final expression = Expression([
+          ParenthesisToken('('),
+          DigitToken(2),
+          OperatorToken('+'),
+          ParenthesisToken('('),
+          DigitToken(3),
+          OperatorToken('*'),
+          DigitToken(4),
+        ]);
+
+        final result = evaluateExpression(expression: expression);
+
+        expect(result, '14');
+      });
     });
 
     group('Edge Cases -', () {
