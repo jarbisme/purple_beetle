@@ -9,34 +9,13 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
   final AddToken _addToken;
   final EvaluateExpression _evaluateExpression;
 
-  CalculatorBloc({AddToken? addToken, EvaluateExpression? evaluateExpression})
-    : _addToken = addToken ?? AddToken(),
-      _evaluateExpression = evaluateExpression ?? EvaluateExpression(),
+  CalculatorBloc({required AddToken addToken, required EvaluateExpression evaluateExpression})
+    : _addToken = addToken,
+      _evaluateExpression = evaluateExpression,
       super(CalculatorState()) {
     on<InsertToken>(_handleInsertToken);
 
-    on<Backspace>((event, emit) {
-      final currentState = state;
-
-      if (currentState.cursorIndex == 0) return; // Nothing to delete
-
-      // Update the expression
-      var currentExpression = currentState.expression;
-      final updatedTokens = List<ExpressionToken>.from(currentExpression.tokens);
-      updatedTokens.removeAt(currentState.cursorIndex - 1);
-      currentExpression = Expression(updatedTokens);
-      final newCursorIndex = currentState.cursorIndex - 1;
-
-      final result = _tryEvaluate(currentExpression);
-
-      // If evaluation fails, return error state
-      if (result == null && currentExpression.tokens.isNotEmpty) {
-        emit(currentState.copyWith(error: 'Error', expression: currentExpression, cursorIndex: newCursorIndex));
-        return;
-      }
-
-      emit(CalculatorState(expression: currentExpression, cursorIndex: newCursorIndex, result: result));
-    });
+    on<Backspace>(_handleBackspace);
 
     on<MoveCursor>((event, emit) {
       emit(state.copyWith(cursorIndex: event.newIndex));
@@ -46,24 +25,52 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
       emit(CalculatorState(expression: Expression([]), cursorIndex: 0));
     });
 
-    on<Evaluate>((event, emit) {
-      // evaluates the expression, saves it to the history, and set the current expression as the result
-      final result = _evaluateExpression.call(expression: state.expression);
-
-      // TODO: Parse result to list of ExpressionTokens
-
-      if (result == null) {
-        // Handle evaluation error (e.g., emit an error state or keep the current state)
-        emit(state.copyWith(error: 'Error', clearResult: true));
-        return;
-      }
-
-      final newExpression = _parseResultToExpression(result);
-
-      emit(CalculatorState(expression: newExpression, result: result, cursorIndex: newExpression.tokens.length));
-    });
+    on<Evaluate>(_handleEvaluate);
   }
 
+  // #region  ============ Event Handlers ============
+
+  // Handles the backspace event to delete the token before the cursor
+  void _handleBackspace(Backspace event, Emitter<CalculatorState> emit) {
+    final currentState = state;
+
+    if (currentState.cursorIndex == 0) return; // Nothing to delete
+
+    // Update the expression
+    var currentExpression = currentState.expression;
+    final updatedTokens = List<ExpressionToken>.from(currentExpression.tokens);
+    updatedTokens.removeAt(currentState.cursorIndex - 1);
+    currentExpression = Expression(updatedTokens);
+    final newCursorIndex = currentState.cursorIndex - 1;
+
+    final result = _tryEvaluate(currentExpression);
+
+    // If evaluation fails, return error state
+    if (result == null && currentExpression.tokens.isNotEmpty) {
+      emit(currentState.copyWith(error: 'Error', expression: currentExpression, cursorIndex: newCursorIndex));
+      return;
+    }
+
+    emit(CalculatorState(expression: currentExpression, cursorIndex: newCursorIndex, result: result));
+  }
+
+  // Handles the evaluate event to compute the result of the current expression
+  void _handleEvaluate(Evaluate event, Emitter<CalculatorState> emit) {
+    // evaluates the expression, saves it to the history, and set the current expression as the result
+    final result = _evaluateExpression.call(expression: state.expression);
+
+    if (result == null) {
+      // Handle evaluation error (e.g., emit an error state or keep the current state)
+      emit(state.copyWith(error: 'Error', clearResult: true));
+      return;
+    }
+
+    final newExpression = _parseResultToExpression(result);
+
+    emit(CalculatorState(expression: newExpression, result: result, cursorIndex: newExpression.tokens.length));
+  }
+
+  // Handles the insert token event to add a new token at the cursor position
   void _handleInsertToken(InsertToken event, Emitter<CalculatorState> emit) {
     final tokenAdditionResult = _addToken.call(
       currentExpression: state.expression,
@@ -92,6 +99,9 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
       );
     }
   }
+  //#endregion
+
+  // #region  ============ Helper Methods ============
 
   Expression _parseResultToExpression(String result) {
     final tokens = <ExpressionToken>[];
@@ -131,4 +141,6 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
       return null;
     }
   }
+
+  //#endregion
 }
