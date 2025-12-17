@@ -22,7 +22,7 @@ class EvaluateExpression {
       // Phase 4: Evaluation
       return _evaluateExpression(strExpression);
     } catch (e) {
-      return 'Error';
+      return null;
     }
   }
 
@@ -218,14 +218,14 @@ class EvaluateExpression {
   //#region  ============ Phase 4: Evaluation ============
 
   /// Evaluates the mathematical expression string and returns the result as a string
-  String _evaluateExpression(String expression) {
+  String? _evaluateExpression(String expression) {
     final parser = math.GrammarParser();
     final exp = parser.parse(expression);
     final evaluator = math.RealEvaluator();
     final result = evaluator.evaluate(exp);
 
     if (result.isNaN || result.isInfinite) {
-      return 'Error';
+      return null;
     }
 
     if (result % 1 == 0) {

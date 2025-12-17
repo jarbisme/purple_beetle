@@ -205,7 +205,7 @@ void main() {
 
         final result = evaluateExpression(expression: expression);
 
-        expect(result, 'Error');
+        expect(result, null);
       });
     });
   });

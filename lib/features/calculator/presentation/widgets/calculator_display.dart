@@ -43,7 +43,14 @@ class CalculatorDisplay extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(state.result ?? '0', style: theme.textTheme.displayLarge),
+                          Text(
+                            state.result ?? '0',
+                            style: state.error != null
+                                ? theme.textTheme.displayLarge?.copyWith(
+                                    color: theme.colorScheme.primary.withValues(alpha: 0.7),
+                                  )
+                                : theme.textTheme.displayLarge,
+                          ),
                           Container(
                             height: 3.5,
                             decoration: BoxDecoration(

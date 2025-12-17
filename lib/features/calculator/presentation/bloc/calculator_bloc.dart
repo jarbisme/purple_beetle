@@ -29,6 +29,12 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
 
       final result = _tryEvaluate(currentExpression);
 
+      // If evaluation fails, return error state
+      if (result == null && currentExpression.tokens.isNotEmpty) {
+        emit(currentState.copyWith(error: 'Error', expression: currentExpression, cursorIndex: newCursorIndex));
+        return;
+      }
+
       emit(CalculatorState(expression: currentExpression, cursorIndex: newCursorIndex, result: result));
     });
 
@@ -48,6 +54,7 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
 
       if (result == null) {
         // Handle evaluation error (e.g., emit an error state or keep the current state)
+        emit(state.copyWith(error: 'Error', clearResult: true));
         return;
       }
 
@@ -58,15 +65,32 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
   }
 
   void _handleInsertToken(InsertToken event, Emitter<CalculatorState> emit) {
-    final result = _addToken.call(
+    final tokenAdditionResult = _addToken.call(
       currentExpression: state.expression,
       tokenToAdd: event.token,
       cursorIndex: state.cursorIndex,
     );
 
-    final expressionResult = _tryEvaluate(result.expression);
+    final expressionResult = _tryEvaluate(tokenAdditionResult.expression);
 
-    emit(CalculatorState(expression: result.expression, cursorIndex: result.newCursorIndex, result: expressionResult));
+    // If evaluation fails, return error state
+    if (expressionResult == null) {
+      emit(
+        state.copyWith(
+          error: 'Error',
+          expression: tokenAdditionResult.expression,
+          cursorIndex: tokenAdditionResult.newCursorIndex,
+        ),
+      );
+    } else {
+      emit(
+        CalculatorState(
+          expression: tokenAdditionResult.expression,
+          cursorIndex: tokenAdditionResult.newCursorIndex,
+          result: expressionResult,
+        ),
+      );
+    }
   }
 
   Expression _parseResultToExpression(String result) {
@@ -90,7 +114,7 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     return Expression(tokens);
   }
 
-  String _tryEvaluate(Expression expression) {
+  String? _tryEvaluate(Expression expression) {
     if (expression.tokens.isEmpty) {
       return '0';
     }
@@ -99,12 +123,12 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     try {
       final result = _evaluateExpression.call(expression: expression);
       stopwatch.stop();
-      print('Evaluation took: ${stopwatch.elapsedMilliseconds} ms');
-      return result ?? 'Error';
+      // print('Evaluation took: ${stopwatch.elapsedMilliseconds} ms');
+      return result;
     } catch (e) {
       stopwatch.stop();
-      print('Evaluation failed after: ${stopwatch.elapsedMilliseconds} ms');
-      return 'Error';
+      // print('Evaluation failed after: ${stopwatch.elapsedMilliseconds} ms');
+      return null;
     }
   }
 }
