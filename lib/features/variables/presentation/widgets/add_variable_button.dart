@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:purple_beetle/features/variables/presentation/bloc/variables_bloc.dart';
-import 'package:purple_beetle/features/variables/presentation/bloc/variables_event.dart';
+import 'package:purple_beetle/features/variables/presentation/pages/variable_editor_sheet.dart';
 
 /// The static button to add a new variable, shown as the first item in the VariablesBar.
 class AddVariableButton extends StatelessWidget {
@@ -17,13 +17,18 @@ class AddVariableButton extends StatelessWidget {
         // height: 50,
         child: TextButton(
           onPressed: () {
-            // showModalBottomSheet(
-            //   context: context,
-            //   builder: (_) {
-            //     return Container(height: 600, padding: EdgeInsets.all(16.0));
-            //   },
-            // );
-            context.read<VariablesBloc>().add(CreateVariable(name: 'New Variable', value: 0, color: Colors.blue));
+            showModalBottomSheet(
+              context: context,
+              builder: (_) {
+                return BlocProvider.value(
+                  value: BlocProvider.of<VariablesBloc>(context),
+                  child: const VariableEditorSheet(),
+                );
+              },
+              isScrollControlled: true,
+              isDismissible: true,
+              useSafeArea: true,
+            );
           },
           style: TextButton.styleFrom(
             backgroundColor: Colors.transparent,

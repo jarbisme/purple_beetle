@@ -63,6 +63,14 @@ class AppTheme {
     ),
 
     dividerTheme: DividerThemeData(color: _primaryColor.withValues(alpha: 0.3), thickness: 1),
+
+    inputDecorationTheme: InputDecorationTheme(
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0), borderSide: BorderSide.none),
+      labelStyle: TextStyle(color: _primaryColor.withValues(alpha: 0.5)),
+      filled: true,
+      fillColor: _primaryColor.withValues(alpha: 0.05),
+      floatingLabelBehavior: FloatingLabelBehavior.never,
+    ),
   );
 
   static final ThemeData darkTheme = ThemeData(
