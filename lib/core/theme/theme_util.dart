@@ -27,9 +27,34 @@ class AppTheme {
     // Define the default font family
     fontFamily: GoogleFonts.comfortaa().fontFamily,
 
+    // Define the default text theme
     textTheme: TextTheme(
-      displayLarge: TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: _primaryColor),
+      // Display styles - largest text (headlines, hero text)
+      displayLarge: TextStyle(fontSize: 57, fontWeight: FontWeight.bold, color: _primaryColor),
+      displayMedium: TextStyle(fontSize: 45, fontWeight: FontWeight.bold, color: _primaryColor),
+      displaySmall: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: _primaryColor),
+
+      // Headline styles - section headers
+      headlineLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: _primaryColor),
+      headlineMedium: TextStyle(fontSize: 28, fontWeight: FontWeight.w600, color: _primaryColor),
+      headlineSmall: TextStyle(fontSize: 24, fontWeight: FontWeight.w600, color: _primaryColor),
+
+      // Title styles - prominent text (app bars, list tiles)
+      titleLarge: TextStyle(fontSize: 22, fontWeight: FontWeight.w500, color: _primaryColor),
+      titleMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: _primaryColor),
+      titleSmall: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: _primaryColor),
+
+      // Body styles - main content text
+      bodyLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: _primaryColor),
+      bodyMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: _primaryColor),
+      bodySmall: TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: _primaryColor),
+
+      // Label styles - buttons, labels, captions
+      labelLarge: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: _primaryColor),
+      labelMedium: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: _primaryColor),
+      labelSmall: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: _primaryColor),
     ),
+
     // Define background colors
     scaffoldBackgroundColor: _primaryBackgroundColor, // Primary background
     // Define component themes
@@ -47,8 +72,10 @@ class AppTheme {
       ),
     ),
 
+    // Icon theme for consistent icon styling
     iconTheme: IconThemeData(color: _primaryColor, size: 30),
 
+    // Text button theme
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(borderRadius)),
@@ -62,11 +89,13 @@ class AppTheme {
       ),
     ),
 
+    // Divider theme for consistent divider styling
     dividerTheme: DividerThemeData(color: _primaryColor.withValues(alpha: 0.3), thickness: 1),
 
+    // Input decoration theme for text fields
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0), borderSide: BorderSide.none),
-      labelStyle: TextStyle(color: _primaryColor.withValues(alpha: 0.5)),
+      labelStyle: TextStyle(fontSize: 20, color: _primaryColor.withValues(alpha: 0.3)),
       filled: true,
       fillColor: _primaryColor.withValues(alpha: 0.05),
       floatingLabelBehavior: FloatingLabelBehavior.never,

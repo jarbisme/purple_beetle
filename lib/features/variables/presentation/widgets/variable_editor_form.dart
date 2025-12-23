@@ -24,9 +24,10 @@ class VariableEditorForm extends StatelessWidget {
         children: [
           Text(
             isEditing ? 'Edit Variable' : 'Create New Variable',
-            style: Theme.of(context).textTheme.headlineMedium,
+            style: Theme.of(context).textTheme.headlineSmall,
             textAlign: TextAlign.left,
           ),
+          SizedBox(height: 16),
           TextFormField(
             controller: _nameController,
             decoration: InputDecoration(labelText: 'Name'),
