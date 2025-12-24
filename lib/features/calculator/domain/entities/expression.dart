@@ -27,3 +27,9 @@ class ParenthesisToken extends ExpressionToken {
   final String parenthesis;
   ParenthesisToken(this.parenthesis);
 }
+
+/// Represents a variable token in the expression
+class VariableToken extends ExpressionToken {
+  final String variableId;
+  VariableToken(this.variableId);
+}

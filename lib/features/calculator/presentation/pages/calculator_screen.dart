@@ -9,9 +9,8 @@ class CalculatorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(title: const Text('Calculation Screen')),
       resizeToAvoidBottomInset: false,
-      body: Column(children: [CalculatorDisplay(), Divider(), VariablesBar(), Keypad()]),
+      body: Column(children: [CalculatorDisplay(), Divider(height: 24.0), VariablesBar(), Keypad()]),
     );
   }
 }

@@ -1,14 +1,25 @@
 import 'package:math_expressions/math_expressions.dart' as math;
 import 'package:purple_beetle/features/calculator/domain/entities/expression.dart';
+import 'package:purple_beetle/features/variables/domain/repositories/variables_repository.dart';
 
+/// Use case for evaluating mathematical expressions represented as a list of ExpressionTokens
+/// The evaluation process involves multiple phases:
+/// 1. Token Preprocessing: Handle implicit multiplication, balance parentheses, clean trailing operators/decimal points
+/// 2. Token to String Conversion: Convert tokens to a string expression, resolving variable values
+/// 3. String-level Transformations: Handle percentages and other string-level adjustments
+/// 4. Evaluation: Evaluate the final expression string and return the result
 class EvaluateExpression {
-  String? call({required expression}) {
+  final VariablesRepository _variablesRepository;
+
+  EvaluateExpression({required VariablesRepository variablesRepository}) : _variablesRepository = variablesRepository;
+
+  Future<String?> call({required expression}) async {
     try {
       // Phase 1: Token Preprocessing
       List<ExpressionToken> tokens = _preprocessTokens(expression.tokens);
 
       // Phase 2: Token to String Conversion
-      String strExpression = _tokensToString(tokens);
+      String strExpression = await _tokensToString(tokens);
 
       // Phase 3: String-level Transformations
       strExpression = _handlePercentage(strExpression);
@@ -143,7 +154,7 @@ class EvaluateExpression {
   //#region  ============ Phase 2: Token to String Conversion ============
 
   /// Converts a list of ExpressionTokens to a string expression
-  String _tokensToString(List<ExpressionToken> tokens) {
+  Future<String> _tokensToString(List<ExpressionToken> tokens) async {
     final buffer = StringBuffer();
 
     for (final token in tokens) {
@@ -155,6 +166,14 @@ class EvaluateExpression {
         buffer.write(token.operator);
       } else if (token is ParenthesisToken) {
         buffer.write(token.parenthesis);
+      } else if (token is VariableToken) {
+        // TODO: Handle variable token conversion
+        var variable = await _variablesRepository.getVariableById(token.variableId);
+        if (variable != null) {
+          buffer.write(variable.value);
+        } else {
+          throw Exception('Variable not found: ${token.variableId}');
+        }
       } else {
         throw Exception('Unrecognized token: $token');
       }

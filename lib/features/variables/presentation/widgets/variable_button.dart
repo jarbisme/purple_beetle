@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:purple_beetle/features/calculator/domain/entities/expression.dart';
+import 'package:purple_beetle/features/calculator/presentation/bloc/calculator_bloc.dart';
+import 'package:purple_beetle/features/calculator/presentation/bloc/calculator_event.dart';
 import 'package:purple_beetle/features/variables/domain/entities/variable.dart';
 
 /// A button widget that displays a variable's name and value.
@@ -14,10 +18,13 @@ class VariableButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 8.0),
       child: TextButton(
-        onPressed: () {},
+        onPressed: () {
+          // Insert variable into expression
+          context.read<CalculatorBloc>().add(InsertTokenEvent(VariableToken(variable.id)));
+        },
         style: TextButton.styleFrom(
           padding: EdgeInsets.symmetric(horizontal: 24.0),
-          backgroundColor: theme.colorScheme.secondary,
+          backgroundColor: Color(variable.color),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         ),

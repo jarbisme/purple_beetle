@@ -78,7 +78,7 @@ class _VariableEditorSheetState extends State<VariableEditorSheet> {
                           final value = double.tryParse(_valueController.text.trim()) ?? 0;
 
                           context.read<VariablesBloc>().add(
-                            CreateVariable(name: name, value: value, color: Colors.blue),
+                            CreateVariableEvent(name: name, value: value, color: theme.colorScheme.primary),
                           );
                           Navigator.of(context).pop();
                         }

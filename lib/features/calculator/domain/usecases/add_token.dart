@@ -41,6 +41,8 @@ class AddToken {
       }
     }
 
+    // TODO: Add rules for variables
+
     // If validation passes, insert the token and advance the cursor
     tokens.insert(cursorIndex, tokenToAdd);
     return AddTokenResult(expression: Expression(tokens), newCursorIndex: cursorIndex + 1);

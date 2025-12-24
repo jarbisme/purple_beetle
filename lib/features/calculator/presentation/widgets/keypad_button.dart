@@ -78,7 +78,7 @@ class TextKeypadButton extends StatelessWidget {
         if (onPressed != null) {
           onPressed!();
         } else if (token != null) {
-          context.read<CalculatorBloc>().add(InsertToken(token!));
+          context.read<CalculatorBloc>().add(InsertTokenEvent(token!));
         }
       },
       child: Text(number, style: TextStyle(color: color ?? Theme.of(context).colorScheme.primary)),
@@ -117,7 +117,7 @@ class IconKeypadButton extends StatelessWidget {
         if (onPressed != null) {
           onPressed!();
         } else if (token != null) {
-          context.read<CalculatorBloc>().add(InsertToken(token!));
+          context.read<CalculatorBloc>().add(InsertTokenEvent(token!));
         }
       },
       child: icon,

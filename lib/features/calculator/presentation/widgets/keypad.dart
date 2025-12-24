@@ -36,7 +36,7 @@ class Keypad extends StatelessWidget {
                           backgroundColor: theme.colorScheme.secondary.withValues(alpha: 0.1),
                           onPressed: () {
                             // Handle clear expression action
-                            context.read<CalculatorBloc>().add(ClearExpression());
+                            context.read<CalculatorBloc>().add(ClearExpressionEvent());
                           },
                         ),
                         TextKeypadButton(number: '-/+', color: theme.colorScheme.secondary),
@@ -115,7 +115,7 @@ class Keypad extends StatelessWidget {
                         padding: const EdgeInsets.all(0),
                         onPressed: () {
                           // Handle backspace action
-                          context.read<CalculatorBloc>().add(Backspace());
+                          context.read<CalculatorBloc>().add(BackspaceEvent());
                         },
                       ),
                       const SizedBox(height: 8),
@@ -149,7 +149,7 @@ class Keypad extends StatelessWidget {
                         color: Colors.white,
                         backgroundColor: theme.colorScheme.primary,
                         onPressed: () {
-                          context.read<CalculatorBloc>().add(Evaluate());
+                          context.read<CalculatorBloc>().add(EvaluateEvent());
                         },
                       ),
                     ],

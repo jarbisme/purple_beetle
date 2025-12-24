@@ -12,32 +12,32 @@ abstract class VariablesEvent {
 class LoadVariables extends VariablesEvent {}
 
 /// Event to create a new variable with a name, value, and color.
-class CreateVariable extends VariablesEvent {
+class CreateVariableEvent extends VariablesEvent {
   final String name;
   final double value;
   final Color color;
 
-  const CreateVariable({required this.name, required this.value, required this.color});
+  const CreateVariableEvent({required this.name, required this.value, required this.color});
 
   @override
   List<Object> get props => [name, value, color];
 }
 
 /// Event to select a variable for editing or using its value.
-class SelectVariable extends VariablesEvent {
+class SelectVariableEvent extends VariablesEvent {
   final Variable variable;
 
-  const SelectVariable(this.variable);
+  const SelectVariableEvent(this.variable);
 
   @override
   List<Object> get props => [variable];
 }
 
 /// Event to delete a variable by its identifier.
-class DeleteVariable extends VariablesEvent {
+class DeleteVariableEvent extends VariablesEvent {
   final String variableId;
 
-  const DeleteVariable(this.variableId);
+  const DeleteVariableEvent(this.variableId);
 
   @override
   List<Object> get props => [variableId];

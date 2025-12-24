@@ -13,25 +13,25 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     : _addToken = addToken,
       _evaluateExpression = evaluateExpression,
       super(CalculatorState()) {
-    on<InsertToken>(_handleInsertToken);
+    on<InsertTokenEvent>(_handleInsertToken);
 
-    on<Backspace>(_handleBackspace);
+    on<BackspaceEvent>(_handleBackspace);
 
-    on<MoveCursor>((event, emit) {
+    on<MoveCursorEvent>((event, emit) {
       emit(state.copyWith(cursorIndex: event.newIndex));
     });
 
-    on<ClearExpression>((event, emit) {
+    on<ClearExpressionEvent>((event, emit) {
       emit(CalculatorState(expression: Expression([]), cursorIndex: 0));
     });
 
-    on<Evaluate>(_handleEvaluate);
+    on<EvaluateEvent>(_handleEvaluate);
   }
 
   // #region  ============ Event Handlers ============
 
   // Handles the backspace event to delete the token before the cursor
-  void _handleBackspace(Backspace event, Emitter<CalculatorState> emit) {
+  void _handleBackspace(BackspaceEvent event, Emitter<CalculatorState> emit) async {
     final currentState = state;
 
     if (currentState.cursorIndex == 0) return; // Nothing to delete
@@ -43,7 +43,7 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     currentExpression = Expression(updatedTokens);
     final newCursorIndex = currentState.cursorIndex - 1;
 
-    final result = _tryEvaluate(currentExpression);
+    final result = await _tryEvaluate(currentExpression);
 
     // If evaluation fails, return error state
     if (result == null && currentExpression.tokens.isNotEmpty) {
@@ -55,9 +55,9 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
   }
 
   // Handles the evaluate event to compute the result of the current expression
-  void _handleEvaluate(Evaluate event, Emitter<CalculatorState> emit) {
+  void _handleEvaluate(EvaluateEvent event, Emitter<CalculatorState> emit) async {
     // evaluates the expression, saves it to the history, and set the current expression as the result
-    final result = _evaluateExpression.call(expression: state.expression);
+    final result = await _evaluateExpression.call(expression: state.expression);
 
     if (result == null) {
       // Handle evaluation error (e.g., emit an error state or keep the current state)
@@ -71,14 +71,14 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
   }
 
   // Handles the insert token event to add a new token at the cursor position
-  void _handleInsertToken(InsertToken event, Emitter<CalculatorState> emit) {
+  void _handleInsertToken(InsertTokenEvent event, Emitter<CalculatorState> emit) async {
     final tokenAdditionResult = _addToken.call(
       currentExpression: state.expression,
       tokenToAdd: event.token,
       cursorIndex: state.cursorIndex,
     );
 
-    final expressionResult = _tryEvaluate(tokenAdditionResult.expression);
+    final expressionResult = await _tryEvaluate(tokenAdditionResult.expression);
 
     // If evaluation fails, return error state
     if (expressionResult == null) {
@@ -124,14 +124,14 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     return Expression(tokens);
   }
 
-  String? _tryEvaluate(Expression expression) {
+  Future<String?> _tryEvaluate(Expression expression) async {
     if (expression.tokens.isEmpty) {
       return '0';
     }
 
     final stopwatch = Stopwatch()..start();
     try {
-      final result = _evaluateExpression.call(expression: expression);
+      final result = await _evaluateExpression.call(expression: expression);
       stopwatch.stop();
       // print('Evaluation took: ${stopwatch.elapsedMilliseconds} ms');
       return result;
