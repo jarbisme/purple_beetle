@@ -4,6 +4,7 @@ import 'package:purple_beetle/features/calculator/presentation/bloc/calculator_b
 import 'package:purple_beetle/features/calculator/presentation/bloc/calculator_state.dart';
 import 'package:purple_beetle/features/calculator/presentation/widgets/expression_editor.dart';
 
+/// Widget to display the current result and expression in the calculator
 class CalculatorDisplay extends StatelessWidget {
   const CalculatorDisplay({super.key});
 
@@ -16,49 +17,52 @@ class CalculatorDisplay extends StatelessWidget {
         return Expanded(
           child: Container(
             alignment: Alignment.bottomRight,
-            padding: const EdgeInsets.only(right: 16.0, left: 16.0, top: 12.0),
+            // padding: const EdgeInsets.only(right: 16.0, left: 16.0, top: 12.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    IntrinsicWidth(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Opacity(opacity: 0.3, child: Text('= ', style: theme.textTheme.displayLarge)),
-                          const SizedBox(height: 3.5),
-                        ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      IntrinsicWidth(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Opacity(opacity: 0.3, child: Text('= ', style: theme.textTheme.displayLarge)),
+                            const SizedBox(height: 3.5),
+                          ],
+                        ),
                       ),
-                    ),
-                    IntrinsicWidth(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            state.result ?? '0',
-                            style: state.error != null
-                                ? theme.textTheme.displayLarge?.copyWith(
-                                    color: theme.colorScheme.primary.withValues(alpha: 0.7),
-                                  )
-                                : theme.textTheme.displayLarge,
-                          ),
-                          Container(
-                            height: 3.5,
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primary,
-                              borderRadius: BorderRadius.circular(10),
+                      IntrinsicWidth(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              state.result ?? '0',
+                              style: state.error != null
+                                  ? theme.textTheme.displayLarge?.copyWith(
+                                      color: theme.colorScheme.primary.withValues(alpha: 0.7),
+                                    )
+                                  : theme.textTheme.displayLarge,
                             ),
-                          ),
-                        ],
+                            Container(
+                              height: 3.5,
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.primary,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 // Expression display area
                 ExpressionEditor(),

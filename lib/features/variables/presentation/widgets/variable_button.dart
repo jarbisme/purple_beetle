@@ -14,7 +14,6 @@ class VariableButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(right: 8.0),
       child: TextButton(
