@@ -16,6 +16,8 @@ enum CursorPosition {
   after, // Cursor after this token
 }
 
+/// Widget to display a single token in the expression editor, with optional cursor overlay
+// TODO: Refactpr isFirst and isLast properties so it can't have both true at the same time
 class ExpressionTokenItem extends StatelessWidget {
   final ExpressionToken token;
   final int tokenIndex;
