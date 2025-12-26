@@ -10,28 +10,28 @@ import 'package:purple_beetle/features/variables/presentation/bloc/variables_blo
 import 'package:purple_beetle/features/variables/presentation/bloc/variables_state.dart';
 
 /// Represents where the cursor should be positioned relative to a token
-enum CursorPosition {
-  none, // No cursor at this token
-  before, // Cursor before this token
-  after, // Cursor after this token
-}
+/// [none] means no cursor at this token
+/// [before] means cursor before this token
+/// [after] means cursor after this token
+enum CursorPosition { none, before, after }
 
 /// Widget to display a single token in the expression editor, with optional cursor overlay
-// TODO: Refactpr isFirst and isLast properties so it can't have both true at the same time
+/// [tokenIndex] is the index of this token in the expression
+/// [token] is the expression token to display
+/// [cursorPosition] indicates where to draw the cursor relative to the token
+/// [cursorKey] is used to identify the cursor widget for scrolling purposes
 class ExpressionTokenItem extends StatelessWidget {
   final ExpressionToken token;
   final int tokenIndex;
   final CursorPosition cursorPosition;
-  final bool isFirst;
-  final bool isLast;
+  final GlobalKey? cursorKey;
 
   const ExpressionTokenItem({
     super.key,
     required this.token,
     required this.tokenIndex,
     required this.cursorPosition,
-    required this.isFirst,
-    required this.isLast,
+    this.cursorKey,
   });
 
   @override
@@ -51,17 +51,10 @@ class ExpressionTokenItem extends StatelessWidget {
           Positioned(
             left: cursorPosition == CursorPosition.before ? 0 : null,
             right: cursorPosition == CursorPosition.after ? 0 : null,
-            child: BlinkingCursor(),
+            child: BlinkingCursor(key: cursorKey),
           ),
         ],
       );
-    }
-
-    // Add padding if it's the first or last token
-    if (isFirst) {
-      tokenWidget = Padding(padding: const EdgeInsets.only(left: 8.0), child: tokenWidget);
-    } else if (isLast) {
-      tokenWidget = Padding(padding: const EdgeInsets.only(right: 8.0), child: tokenWidget);
     }
 
     // Wrap with GestureDetector to handle taps for moving the cursor
