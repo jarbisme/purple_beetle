@@ -12,6 +12,16 @@ class VariableButton extends StatelessWidget {
 
   final Variable variable;
 
+  // Format value to remove unnecessary decimal places
+  String _formatValue(double value) {
+    // Check if the value is a whole number
+    if (value == value.truncateToDouble()) {
+      return value.toInt().toString(); // Return as integer string
+    }
+    // Otherwise, return as string and remove trailing zeros
+    return value.toStringAsFixed(10).replaceAll(RegExp(r'0*$'), '').replaceAll(RegExp(r'\.$'), '');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -35,7 +45,7 @@ class VariableButton extends StatelessWidget {
               variable.name,
               style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white70),
             ),
-            Text('${variable.value}', style: TextStyle(fontSize: 16)),
+            Text(_formatValue(variable.value), style: TextStyle(fontSize: 16)),
           ],
         ),
       ),
