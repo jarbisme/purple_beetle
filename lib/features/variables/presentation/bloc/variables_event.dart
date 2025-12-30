@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:purple_beetle/core/theme/app_colors.dart';
 import 'package:purple_beetle/features/variables/domain/entities/variable.dart';
 
 @immutable
@@ -15,7 +16,7 @@ class LoadVariables extends VariablesEvent {}
 class CreateVariableEvent extends VariablesEvent {
   final String name;
   final double value;
-  final Color color;
+  final VariableColorSlot color;
 
   const CreateVariableEvent({required this.name, required this.value, required this.color});
 

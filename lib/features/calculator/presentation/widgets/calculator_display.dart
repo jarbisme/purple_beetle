@@ -77,7 +77,10 @@ class CalculatorDisplay extends StatelessWidget {
                                       ? theme.textTheme.displayLarge?.copyWith(
                                           color: theme.colorScheme.primary.withValues(alpha: 0.7),
                                         )
-                                      : theme.textTheme.displayLarge,
+                                      : theme.textTheme.displayLarge?.copyWith(
+                                          // fontWeight: FontWeight.normal,
+                                          // color: theme.colorScheme.secondary,
+                                        ),
                                 ),
                               ),
                               Container(

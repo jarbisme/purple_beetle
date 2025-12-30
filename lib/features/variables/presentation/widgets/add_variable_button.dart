@@ -19,6 +19,7 @@ class AddVariableButton extends StatelessWidget {
           onPressed: () {
             showModalBottomSheet(
               context: context,
+              backgroundColor: Colors.transparent,
               builder: (_) {
                 return BlocProvider.value(
                   value: BlocProvider.of<VariablesBloc>(context),

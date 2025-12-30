@@ -17,7 +17,7 @@ class VariablesBloc extends Bloc<VariablesEvent, VariablesState> {
     });
     on<CreateVariableEvent>((event, emit) async {
       // Handle creating a variable logic here
-      final result = await _createVariable.call(name: event.name, value: event.value, color: event.color.toARGB32());
+      final result = await _createVariable.call(name: event.name, value: event.value, color: event.color.index);
 
       if (result == null) {
         // Handle error case if needed

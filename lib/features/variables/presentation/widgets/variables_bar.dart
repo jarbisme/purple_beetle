@@ -17,6 +17,7 @@ class VariablesBar extends StatelessWidget {
         return SizedBox(
           height: 50,
           child: ListView.builder(
+            padding: EdgeInsets.symmetric(horizontal: 4.0),
             itemBuilder: (context, index) {
               // First item is the add variable button
               if (index == 0) {

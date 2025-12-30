@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:purple_beetle/core/theme/app_colors.dart';
+import 'package:purple_beetle/core/theme/theme_provider.dart';
 import 'package:purple_beetle/features/calculator/domain/entities/expression.dart';
 import 'package:purple_beetle/features/calculator/presentation/bloc/calculator_bloc.dart';
 import 'package:purple_beetle/features/calculator/presentation/bloc/calculator_event.dart';
@@ -134,6 +136,10 @@ Widget _buildTokenWidget(ExpressionToken token, ThemeData theme) {
   }
 
   if (token is VariableToken) {
+    // TODO: Refactor to avoid duplicating themeProvider code
+    final ThemeProvider themeProvider = ThemeProvider();
+    final palette = themeProvider.currentPalette;
+
     // Fetch variable details from VariablesBloc
     return BlocBuilder<VariablesBloc, VariablesState>(
       builder: (context, variablesState) {
@@ -142,16 +148,18 @@ Widget _buildTokenWidget(ExpressionToken token, ThemeData theme) {
           orElse: () => Variable(id: token.variableId, name: 'unknown', value: 0, color: Colors.grey.toARGB32()),
         );
 
+        final variableColor = palette.getColor(VariableColorSlot.values[variable.color]);
+
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 3.0),
           margin: const EdgeInsets.symmetric(horizontal: 4.0),
           decoration: BoxDecoration(
-            color: Color(variable.color).withValues(alpha: 0.1),
+            color: variableColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(7.0),
           ),
           child: Text(
             variable.name,
-            style: theme.textTheme.titleMedium?.copyWith(color: Color(variable.color), fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleMedium?.copyWith(color: variableColor, fontWeight: FontWeight.bold),
           ),
         );
       },

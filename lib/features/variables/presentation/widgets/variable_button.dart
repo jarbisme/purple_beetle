@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:purple_beetle/core/theme/app_colors.dart';
+import 'package:purple_beetle/core/theme/theme_provider.dart';
 import 'package:purple_beetle/features/calculator/domain/entities/expression.dart';
 import 'package:purple_beetle/features/calculator/presentation/bloc/calculator_bloc.dart';
 import 'package:purple_beetle/features/calculator/presentation/bloc/calculator_event.dart';
@@ -24,6 +26,10 @@ class VariableButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: Refactor to avoid duplicating themeProvider code
+    final ThemeProvider themeProvider = ThemeProvider();
+    final palette = themeProvider.currentPalette;
+
     return Padding(
       padding: const EdgeInsets.only(right: 8.0),
       child: TextButton(
@@ -33,7 +39,8 @@ class VariableButton extends StatelessWidget {
         },
         style: TextButton.styleFrom(
           padding: EdgeInsets.symmetric(horizontal: 24.0),
-          backgroundColor: Color(variable.color),
+          // backgroundColor: Color(variable.color),
+          backgroundColor: palette.getColor(VariableColorSlot.values[variable.color]),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         ),
